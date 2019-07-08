@@ -15,5 +15,11 @@ gi = galaxy.GalaxyInstance(url = "http://localhost:8080", key = options.argkey) 
 
 allusers = gi.users.get_users()
 
+# Create API keys for users that don't have one
 for x in range(0, len(allusers)):
     print(allusers[x]['username'])
+    if(gi.users.get_user_apikey(allusers[x]['id']) == "Not available."):
+        gi.users.create_user_apikey(allusers[x]['id']) # create API key for users that don't have one
+        print(gi.users.get_user_apikey(allusers[x]['id']))
+    else:
+        print(gi.users.get_user_apikey(allusers[x]['id']))
