@@ -38,3 +38,8 @@ print(gi.workflows.get_workflows())
 all_workflows = [] # All of the workflows in the enviroment, organized by user
 for j in range(0, len(all_gi)):
     all_workflows.append({'username': allusers[j]['username'], 'workflows': all_gi[j]['gi'].workflows.get_workflows()})
+
+workflow_exports = []
+for k in range(0, len(all_workflows)):
+    for a in range(0, len(all_workflows[k])):
+        workflow_exports.append(gi.workflows.export_workflow_dict(all_workflows[a]['workflows'][0]['id']))
