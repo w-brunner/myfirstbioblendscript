@@ -8,38 +8,43 @@ args=None
 
 parser = OptionParser()
 
-parser.add_option('--apikey', dest="argkey")
+parser.add_option('--localkey', dest="localkey")
+#parser.add_option('--remotekey', dest="remotekey")
 options, args = parser.parse_args(args)
 
-gi = galaxy.GalaxyInstance(url = "http://localhost:8080", key = options.argkey) # gi = galaxy instance; requires an API key to "log in" via code
+gi_local = galaxy.GalaxyInstance(url = "http://localhost:8080", key = options.localkey) # gi_local = galaxy instance; requires an API key to "log in" via code
+#gi_remote = galaxy.GalaxyInstance(url = "", key = options.remotekey)
 
-allusers = gi.users.get_users()
+allusers = gi_local.users.get_users()
 
 # TODO: Unify all these loops...
 
 # Create API keys for users that don't have one
 for x in range(0, len(allusers)):
     print("Username: " + allusers[x]['username'])
-    if(gi.users.get_user_apikey(allusers[x]['id']) == "Not available."):
-        gi.users.create_user_apikey(allusers[x]['id']) # create API key for users that don't have one
-        print("User API Key: " + gi.users.get_user_apikey(allusers[x]['id']))
+    if(gi_local.users.get_user_apikey(allusers[x]['id']) == "Not available."):
+        gi_local.users.create_user_apikey(allusers[x]['id']) # create API key for users that don't have one
+        print("User API Key: " + gi_local.users.get_user_apikey(allusers[x]['id']))
 
     else:
-        print("User API Key: " + gi.users.get_user_apikey(allusers[x]['id']))
+        print("User API Key: " + gi_local.users.get_user_apikey(allusers[x]['id']))
 
 # Put all galaxy instances under one dictionary
 all_apikeys = []
-all_gi = []
+all_gi_local = []
 for i in range(0, len(allusers)):
-    all_apikeys.append(gi.users.get_user_apikey(allusers[i]['id']))
-    all_gi.append({'username': allusers[i]['username'],  'id': gi.users.get_user_apikey(allusers[i]['id']), 'gi': galaxy.GalaxyInstance(url = "http://localhost:8080", key = all_apikeys[i])})
-print(gi.workflows.get_workflows())
+    all_apikeys.append(gi_local.users.get_user_apikey(allusers[i]['id']))
+    all_gi_local.append({'username': allusers[i]['username'],  'id': gi_local.users.get_user_apikey(allusers[i]['id']), 'gi_local': galaxy.GalaxyInstance(url = "http://localhost:8080", key = all_apikeys[i])})
+print(gi_local.workflows.get_workflows())
 
 all_workflows = [] # All of the workflows in the enviroment, organized by user
-for j in range(0, len(all_gi)):
-    all_workflows.append({'username': allusers[j]['username'], 'workflows': all_gi[j]['gi'].workflows.get_workflows()})
+for j in range(0, len(all_gi_local)):
+    all_workflows.append({'username': allusers[j]['username'], 'workflows': all_gi_local[j]['gi_local'].workflows.get_workflows()})
 
 workflow_exports = []
-for k in range(0, len(all_workflows)):
-    for a in range(0, len(all_workflows[k])):
-        workflow_exports.append(gi.workflows.export_workflow_dict(all_workflows[a]['workflows'][0]['id']))
+# TODO: Find a way to save the assc. username of each workflow
+for k in range(0, len(all_workflows)): # User
+    for a in range(0, len(all_workflows[k]['workflows'])):#Workflows within users
+        workflow_exports.append(gi_local.workflows.export_workflow_dict(all_workflows[k]['workflows'][a]['id']))
+        gi_local.workflows.export_workflow_to_local_path(all_workflows[k]['workflows'][a]['id'], '/home/will/Documents/galaxy_bioblend_dev')# Append the workflow name with name of user
+        print("Exported " + all_workflows[k]['workflows'][a]['name'])
