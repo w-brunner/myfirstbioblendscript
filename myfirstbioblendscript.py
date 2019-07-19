@@ -11,10 +11,11 @@ parser = OptionParser()
 parser.add_option('--localkey', dest = "localkey")
 parser.add_option('--remotekey', dest = "remotekey")
 parser.add_option('--remoteurl', dest = "remoteurl")
+parser.add_option('--savedir', dest = "savedir")
 options, args = parser.parse_args(args)
 
 gi_local = galaxy.GalaxyInstance(url = "http://localhost:8080", key = options.localkey) # gi_local = galaxy instance; requires an API key to "log in" via code
-gi_remote = galaxy.GalaxyInstance(url = options.remoteurl + ":8080", key = options.remotekey)
+gi_remote = galaxy.GalaxyInstance(url = options.remoteurl, key = options.remotekey)
 
 allusers = gi_local.users.get_users()
 
@@ -43,11 +44,15 @@ for j in range(0, len(all_gi_local)):
     all_workflows.append({'username': allusers[j]['username'], 'workflows': all_gi_local[j]['gi_local'].workflows.get_workflows()})
 
 workflow_exports = [] # All of the workflows of the galaxy enviroment
-# TODO: Find a way to save the assc. username of each workflow
+savedworkflow_names = []
 for k in range(0, len(all_workflows)): # User
     for a in range(0, len(all_workflows[k]['workflows'])):#Workflows within users
         workflow_exports.append(gi_local.workflows.export_workflow_dict(all_workflows[k]['workflows'][a]['id']))
         gi_local.workflows.export_workflow_to_local_path(all_workflows[k]['workflows'][a]['id'],
-        '/home/will/Documents/galaxy_bioblend_dev/' + all_workflows[k]['workflows'][a]['owner'] + "_" + all_workflows[k]['workflows'][a]['name'],
-        use_default_filename=False)# Append the workflow name with name of user
+        options.savedir + all_workflows[k]['workflows'][a]['owner'] + "_" + all_workflows[k]['workflows'][a]['name'] + ".ga",
+        use_default_filename=False)
+        savedworkflow_names.append(all_workflows[k]['workflows'][a]['owner'] + "_" + all_workflows[k]['workflows'][a]['name'])
         print("Exported " + all_workflows[k]['workflows'][a]['owner'] + "\'s workflow, " + all_workflows[k]['workflows'][a]['name'])
+for l in range(0, len(savedworkflow_names)):
+    #gi_remote.workflows.import_workflow_from_local_path(options.savedir + savedworkflow_names[l] + ".ga")
+    gi_remote.workflows.import_workflow_dict(workflow_exports[l])
