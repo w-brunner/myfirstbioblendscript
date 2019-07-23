@@ -55,9 +55,9 @@ for k in range(0, len(all_workflows)): # User
         savedworkflow_names.append(all_workflows[k]['workflows'][a]['owner'] + "_" + all_workflows[k]['workflows'][a]['name'])
         print("Exported " + all_workflows[k]['workflows'][a]['owner'] + "\'s workflow, " + all_workflows[k]['workflows'][a]['name'])
 for l in range(0, len(savedworkflow_names)):
-    #gi_remote.workflows.import_workflow_from_local_path(options.savedir + savedworkflow_names[l] + ".ga")
+    gi_remote.workflows.import_workflow_from_local_path(options.savedir + savedworkflow_names[l] + ".ga")
     #gi_remote.workflows.import_workflow_dict(workflow_exports[l])
-    pass
+    #pass
 
 alltools = gi_local.tools.get_tools() + gi_remote.tools.get_tools()
 toolslist = []
@@ -65,5 +65,3 @@ toolslist = []
 for tool in alltools:
     if tool not in toolslist:
         toolslist.append(tool)
-    else:
-        pass
