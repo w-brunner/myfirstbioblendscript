@@ -37,7 +37,8 @@ all_apikeys = []
 all_gi_local = []
 for i in range(0, len(allusers)):
     all_apikeys.append(gi_local.users.get_user_apikey(allusers[i]['id']))
-    all_gi_local.append({'username': allusers[i]['username'],  'id': gi_local.users.get_user_apikey(allusers[i]['id']), 'gi_local': galaxy.GalaxyInstance(url = "http://localhost:8080", key = all_apikeys[i])})
+    all_gi_local.append({'username': allusers[i]['username'], 'id': gi_local.users.get_user_apikey(allusers[i]['id']),
+    'gi_local': galaxy.GalaxyInstance(url = "http://localhost:8080", key = all_apikeys[i])})
 
 all_workflows = [] # All of the workflows in the enviroment, organized by user
 for j in range(0, len(all_gi_local)):
@@ -55,4 +56,14 @@ for k in range(0, len(all_workflows)): # User
         print("Exported " + all_workflows[k]['workflows'][a]['owner'] + "\'s workflow, " + all_workflows[k]['workflows'][a]['name'])
 for l in range(0, len(savedworkflow_names)):
     #gi_remote.workflows.import_workflow_from_local_path(options.savedir + savedworkflow_names[l] + ".ga")
-    gi_remote.workflows.import_workflow_dict(workflow_exports[l])
+    #gi_remote.workflows.import_workflow_dict(workflow_exports[l])
+    pass
+
+alltools = gi_local.tools.get_tools() + gi_remote.tools.get_tools()
+toolslist = []
+
+for tool in alltools:
+    if tool not in toolslist:
+        toolslist.append(tool)
+    else:
+        pass
