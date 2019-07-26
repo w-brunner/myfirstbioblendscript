@@ -18,3 +18,4 @@ all_workflows = gi_remote.workflows.get_workflows()
 
 for x in range(len(all_workflows)):
     gi_remote.workflows.delete_workflow(all_workflows[x]['id'])
+    print("Deleting workflow " + all_workflows[x]['name'])
