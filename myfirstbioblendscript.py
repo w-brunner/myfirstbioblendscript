@@ -45,22 +45,23 @@ for j in range(0, len(all_gi_local)):
     all_workflows.append({'username': allusers[j]['username'], 'workflows': all_gi_local[j]['gi_local'].workflows.get_workflows()})
 
 workflow_exports = [] # All of the workflows of the galaxy enviroment
-savedworkflow_names = []
+savedworkflow_names = [] # The ordered names of each workflow being exported
 for k in range(0, len(all_workflows)): # User
     for a in range(0, len(all_workflows[k]['workflows'])):#Workflows within users
         all_workflows[k]['workflows'][a]['name'] = all_workflows[k]['username'] + "_" + all_workflows[k]['workflows'][a]['name']
         workflow_exports.append(gi_local.workflows.export_workflow_dict(all_workflows[k]['workflows'][a]['id']))
-        gi_local.workflows.export_workflow_to_local_path(all_workflows[k]['workflows'][a]['id'],
+        """gi_local.workflows.export_workflow_to_local_path(all_workflows[k]['workflows'][a]['id'],
         options.savedir + all_workflows[k]['workflows'][a]['name'] + ".ga",
-        use_default_filename=False)
+        use_default_filename=False)""" # I can't export to disk b/c the names aren't exported, and thus the names need to be changed post-export
         savedworkflow_names.append(all_workflows[k]['workflows'][a]['name'])
         print("Exported " + all_workflows[k]['workflows'][a]['owner'] + "\'s workflow, " + all_workflows[k]['workflows'][a]['name'])
 
 for l in range(0, len(savedworkflow_names)):
-    gi_remote.workflows.import_workflow_from_local_path(options.savedir + savedworkflow_names[l] + ".ga")
+    #gi_remote.workflows.import_workflow_from_local_path(options.savedir + savedworkflow_names[l] + ".ga")
     print("Uploaded workflow " + options.savedir + savedworkflow_names[l] + ".ga")
-    #gi_remote.workflows.import_workflow_dict(workflow_exports[l])
+    workflow_exports[l]['name'] = savedworkflow_names[l]
+    gi_remote.workflows.import_workflow_dict(workflow_exports[l])
     #pass
 
-alltools = gi_local.tools.get_tools() + gi_remote.tools.get_tools()
-toolslist = []
+#alltools = gi_local.tools.get_tools() + gi_remote.tools.get_tools()
+#toolslist = []
