@@ -49,7 +49,7 @@ savedworkflow_names = []
 for k in range(0, len(all_workflows)): # User
     for a in range(0, len(all_workflows[k]['workflows'])):#Workflows within users
         all_workflows[k]['workflows'][a]['name'] = all_workflows[k]['username'] + "_" + all_workflows[k]['workflows'][a]['name']
-        #workflow_exports.append(gi_local.workflows.export_workflow_dict(all_workflows[k]['workflows'][a]['id']))
+        workflow_exports.append(gi_local.workflows.export_workflow_dict(all_workflows[k]['workflows'][a]['id']))
         gi_local.workflows.export_workflow_to_local_path(all_workflows[k]['workflows'][a]['id'],
         options.savedir + all_workflows[k]['workflows'][a]['name'] + ".ga",
         use_default_filename=False)
@@ -64,7 +64,3 @@ for l in range(0, len(savedworkflow_names)):
 
 alltools = gi_local.tools.get_tools() + gi_remote.tools.get_tools()
 toolslist = []
-
-for tool in alltools:
-    if tool not in toolslist:
-        toolslist.append(tool)
