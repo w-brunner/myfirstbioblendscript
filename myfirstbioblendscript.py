@@ -64,4 +64,16 @@ for l in range(0, len(savedworkflow_names)):
     #pass
 
 #alltools = gi_local.tools.get_tools() + gi_remote.tools.get_tools()
-#toolslist = []
+#toolslist_unique = []
+
+#for tool in alltools:
+#    if tool['id'] not in toolslist_unique:
+#        toolslist_unique.append(tool['id'])
+#    else:
+#        pass
+
+workflow_tools = []
+
+for workflow in workflow_exports:
+    for step in workflow['steps']:
+        workflow_tools.append(workflow['steps'][step]['tool_id'])# Todo: Some steps don't have tool_id
