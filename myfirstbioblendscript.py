@@ -4,7 +4,7 @@ import bioblend
 import sys # for taking arguements
 from optparse import OptionParser # for taking options;
 
-args=None
+args = None
 
 parser = OptionParser()
 
@@ -74,6 +74,22 @@ for l in range(0, len(savedworkflow_names)):
 
 workflow_tools = []
 
+
 for workflow in workflow_exports:
     for step in workflow['steps']:
-        workflow_tools.append(workflow['steps'][step]['tool_id'])# Todo: Some steps don't have tool_id
+        if workflow['steps'][step]['tool_id'] is None:
+            pass
+        else:
+            workflow_tools.append(workflow['steps'][step]['tool_id'])
+
+workflow_tools = list(set(workflow_tools))
+remote_tools_list = gi_remote.tools.get_tools()
+remote_tools_list_ids = []
+missing_tools_remote = []
+
+for tool in remote_tools_list:
+    remote_tools_list_ids.append(tool['id'])
+
+for tool in workflow_tools:
+    if tool not in remote_tools_list_ids:
+        missing_tools_remote.append(tool)# Tool is missing from remote!
