@@ -28,7 +28,6 @@ for x in range(0, len(allusers)):
         gi_local.users.create_user_apikey(allusers[x]['id']) # create API key for users that don't have one
         print("Created User API Key for User " + allusers[x]['username'])
         print("User API Key: " + gi_local.users.get_user_apikey(allusers[x]['id']) + "\n")
-
     else:
         print("User API Key: " + gi_local.users.get_user_apikey(allusers[x]['id']) + "\n")
 
@@ -93,3 +92,5 @@ for tool in remote_tools_list:
 for tool in workflow_tools:
     if tool not in remote_tools_list_ids:
         missing_tools_remote.append(tool)# Tool is missing from remote!
+        
+print(missing_tools_remote) # *DING!*
