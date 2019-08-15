@@ -58,3 +58,5 @@ for tool in instance_tools:
 
 tool_ids = list(set(tool_ids + workflows_tools))
 
+print(tool_ids)
+
