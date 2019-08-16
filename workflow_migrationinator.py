@@ -19,7 +19,7 @@ parser.add_option('--remoteurl', dest = "remoteurl")
 parser.add_option('--savedir', dest = "savedir")
 parser.add_option('--addunames', dest = "addunames", action = "store_true")
 parser.add_option('--users', dest = "users")
-users = users.split(",")
+users = options.users.split(",")
 options, args = parser.parse_args(args)
 
 gi_local = galaxy.GalaxyInstance(url = options.localurl, key = options.localkey) # gi_local = galaxy instance; requires an API key to "log in" via code
